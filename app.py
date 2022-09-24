@@ -1,42 +1,40 @@
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import dash
 from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
+from read_sheets import read_sheets
 
-app = Dash(external_stylesheets=[dbc.themes.LUX])
-load_figure_template("LUX")
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.MATERIA])
+load_figure_template("MATERIA")
 
 server = app.server
 
-power_dropdown = dcc.Dropdown(options=["One", "Two", "Three", "Four"], value="One")
-mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
-app.layout = html.Div(children=[dbc.Row(html.H1(children="Test Dashboard"), style=mystyle), dbc.Row(power_dropdown, style=mystyle), dbc.Row(dcc.Graph(id="poly_plot"), style=mystyle)])
+df = read_sheets()
 
-@app.callback(Output(component_id="poly_plot", component_property="figure"), Input(component_id=power_dropdown, component_property="value"))
-def update_graph(power):
-    if power == "One":
-        power_int = 1
-    elif power == "Two":
-        power_int = 2
-    elif power == "Three":
-        power_int = 3
-    else:
-        power_int = 4
-    
-    x = np.linspace(0,10)
-    y = x**power_int
-    df = pd.DataFrame(np.stack([x,y],1), columns=["x", "y"])
-    
-    fig = px.line(df, x="x", y="y", title=f"Polynomial Function y=x^{power_int}")
-    return fig 
+week_list = list(df["Week"].unique())
+week_list.sort()
+week_list_str = ["Week " + str(w) for w in week_list]
+week_dropdown_str = week_list_str[-1]
+week_dropdown_val = week_list[-1]
+
+mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
+
+# Layout
+app.layout = html.Div([
+    html.Div(),
+
+    dash.page_container
+    ])
+
+
+
+
+
+
 
 # Run local server
 if __name__ == '__main__':
-    app.run_server(debug=False)
-
-
-# fig.show()
-# df.info()
-# print(df["x"].value_counts())
+    app.run_server(debug=True)
