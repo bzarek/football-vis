@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 import pandas as pd
 import re
 
-API_KEY = "AIzaSyDdVHNJgtF03L_6SGZ6IgrMHQrrqzuBYbA"
+API_KEY = "AIzaSyCH-Tgn-Hvct0UYM1QXGmo7sPbG1PFv8TE"
 FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
 ALIAS_DICT = {"Punith Upadhya": "P $hmurda", "Mr. Atticus Benjamin Ignelzi":"Atig"}
 
