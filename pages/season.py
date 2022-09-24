@@ -31,7 +31,12 @@ def new_data(data):
     #extract dataframe from json
     df = pd.read_json(data, orient="columns")
 
+    #calculate cumulative sum grouped by name over the existing weeks
+    df_cumsum = df[["Name", "Week", "Correct?"]].copy()
+    df_cumsum.rename(columns={"Correct?":"Correct Picks"}, inplace=True)
+    df_cumsum = df_cumsum.groupby(["Name","Week"], as_index=False).sum(numeric_only=True).sort_values(["Name","Week"]).copy()
+    df_cumsum["Cumulative Wins"] = df_cumsum.groupby("Name")["Correct Picks"].transform(pd.Series.cumsum)
+
     #return outputs
-    thisweek_df = df.groupby(["Name", "Week"]).sum(numeric_only=True)
-    fig = px.line(thisweek_df, y="Correct?", labels={"Name", "Correct Picks"})
+    fig = px.line(df_cumsum, x="Week", y="Cumulative Wins", color="Name", labels={"Name", "Cumulative Correct Picks"})
     return fig
