@@ -15,7 +15,8 @@ layout = html.Div(
         dbc.Container([
             dbc.Row([
                 dbc.Col(width=1),
-                dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=10),
+                dbc.Col(dcc.Graph(id="season_bar_chart", config={"displayModeBar":False}), width=5),
+                dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=5),
                 dbc.Col(width=1)
                 ])
             ], fluid=True)
@@ -26,6 +27,7 @@ layout = html.Div(
 
 @callback(
     Output("season_line_plot", "figure"), 
+    Output("season_bar_chart", "figure"),
     Input("memory", "data"),
     )
 def new_data(data):
@@ -33,12 +35,13 @@ def new_data(data):
     #extract dataframe from json
     df = pd.read_json(data, orient="columns")
 
-    #calculate cumulative sum grouped by name over the existing weeks
     df_cumsum = df[["Name", "Week", "Correct?"]].copy()
     df_cumsum.rename(columns={"Correct?":"Correct Picks"}, inplace=True)
     df_cumsum = df_cumsum.groupby(["Name","Week"], as_index=False).sum(numeric_only=True).sort_values(["Name","Week"]).copy()
     df_cumsum["Cumulative Wins"] = df_cumsum.groupby("Name")["Correct Picks"].transform(pd.Series.cumsum)
+    df_cumsum["Week String"] = "Week " + df_cumsum["Week"].astype("string")
 
-    #return outputs
-    fig = px.line(df_cumsum, x="Week", y="Cumulative Wins", color="Name", labels={"Name", "Cumulative Correct Picks"})
-    return fig
+    fig_line = px.line(df_cumsum, x="Week", y="Cumulative Wins", color="Name", labels={"Name", "Cumulative Correct Picks"})
+    fig_bar = px.bar(df_cumsum, x="Correct Picks", y="Name", color="Week String", labels={"Week String":"Week"})
+
+    return fig_line, fig_bar
