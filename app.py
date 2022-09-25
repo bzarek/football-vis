@@ -48,7 +48,9 @@ app.layout = html.Div(
 
         html.Div(
             children=[
-                dbc.Row(navbar)
+                dbc.Container([
+                    dbc.Row(navbar)
+                ])
             ]
         ),
 

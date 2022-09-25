@@ -12,15 +12,17 @@ mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
 
 layout = html.Div(
     children=[ 
-        dbc.Row([
-            dbc.Col(width=1),
-            dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), style=mystyle, width=1, ), 
-            dbc.Col(width=10)
-            ]), 
-        dbc.Row([
-            dbc.Col(width=1),
-            dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), style=mystyle, width=10),
-            dbc.Col(width=1)
+        dbc.Container([
+            dbc.Row([
+                dbc.Col(width=1),
+                dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), style=mystyle, width=1, ), 
+                dbc.Col()
+                ]), 
+            dbc.Row([
+                dbc.Col(width=1),
+                dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), style=mystyle, width=10),
+                dbc.Col()
+                ])
             ])
         ]
     )

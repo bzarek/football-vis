@@ -12,10 +12,12 @@ mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
 
 layout = html.Div(
     children=[ 
-        dbc.Row([
-            dbc.Col(width=1),
-            dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), style=mystyle, width=10),
-            dbc.Col(width=1)
+        dbc.Container([
+            dbc.Row([
+                dbc.Col(width=1),
+                dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=10),
+                dbc.Col(width=1)
+                ])
             ])
         ]
     )
