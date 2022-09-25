@@ -18,7 +18,7 @@ layout = html.Div(
                 dbc.Col(dcc.Graph(id="season_bar_chart", config={"displayModeBar":False}), width=5),
                 dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=5),
                 dbc.Col(width=1)
-                ])
+                ], style={"margin-top":"24px"})
             ], fluid=True)
         ]
     )
