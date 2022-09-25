@@ -7,7 +7,7 @@ import pandas as pd
 
 dash.register_page(__name__, path="/", title="Home", name="Home")
 
-mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
+#mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
 
 layout = html.Div(
     children=[ 
@@ -17,7 +17,7 @@ layout = html.Div(
                 dbc.Col(html.Div(id="container_leaderboard"), width=10), 
                 dbc.Col(width=1)
                 ])
-            ])
+            ], fluid=True)
         ]
     )
 

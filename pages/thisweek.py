@@ -8,22 +8,22 @@ from dash_bootstrap_templates import load_figure_template
 
 dash.register_page(__name__, path="/thisweek", title="This Week", name="This Week")
 
-mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
+#mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
 
 layout = html.Div(
     children=[ 
         dbc.Container([
             dbc.Row([
                 dbc.Col(width=1),
-                dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), style=mystyle, width=1, ), 
+                dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), width=1, ), 
                 dbc.Col()
                 ]), 
             dbc.Row([
                 dbc.Col(width=1),
-                dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), style=mystyle, width=10),
+                dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), width=10),
                 dbc.Col()
                 ])
-            ])
+            ], fluid=True)
         ]
     )
 

@@ -8,7 +8,7 @@ from dash_bootstrap_templates import load_figure_template
 
 dash.register_page(__name__, path="/season", title="Season", name="Season")
 
-mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
+#mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
 
 layout = html.Div(
     children=[ 
@@ -18,7 +18,7 @@ layout = html.Div(
                 dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=10),
                 dbc.Col(width=1)
                 ])
-            ])
+            ], fluid=True)
         ]
     )
 
