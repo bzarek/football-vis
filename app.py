@@ -13,7 +13,7 @@ load_figure_template("FLATLY")
 server = app.server
 
 #read google sheets and store data in browser
-df = read_sheets()
+#df = read_sheets()
 
 
 # week_list = list(df["Week"].unique())
@@ -22,17 +22,27 @@ df = read_sheets()
 # week_dropdown_str = week_list_str[-1]
 # week_dropdown_val = week_list[-1]
 
-mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
+#mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
 
-navbar = dbc.NavbarSimple(
-    children=[
-        dbc.NavItem(dbc.NavLink("This Week", href="/thisweek")),
-        dbc.NavItem(dbc.NavLink("Season", href="/season"))
+# navbar = dbc.NavbarSimple(
+#     children=[
+#         dbc.NavItem(dbc.NavLink("This Week", href="/thisweek")),
+#         dbc.NavItem(dbc.NavLink("Season", href="/season"))
+#     ],
+#     brand="Football Bets",
+#     brand_href="/",
+#     color="primary",
+#     dark=True
+# )
+
+navbar = dbc.Nav(
+    [
+        dbc.NavItem(dbc.NavLink("Home", href="/", active="exact")),
+        dbc.NavItem(dbc.NavLink("This Week", href="/thisweek", active="exact")),
+        dbc.NavItem(dbc.NavLink("Season", href="/season", active="exact"))
     ],
-    brand="Football Bets",
-    brand_href="/",
-    color="primary",
-    dark=True
+    pills=True,
+    justified=True
 )
 
 # Layout
@@ -42,23 +52,28 @@ app.layout = html.Div(
 
         dcc.Interval(
             id='interval-component',
-            interval=60*1000, # in milliseconds
+            interval=5*60*1000, # in milliseconds
             n_intervals=0
         ),
 
         html.Div(
             children=[
                 dbc.Container([
-                    dbc.Row(navbar)
-                ])
-            ]
-        ),
+                    dbc.Row([
+                        dbc.Col(width=4),
+                        dbc.Col(navbar, width=4),
+                        dbc.Col(width=4)
+                    ])
+                    ], fluid=True
+                    )
+                ]
+            ),
 
         dash.page_container
-    ]
-)
+        ]
+    )
 
-#update data periodically
+#update data periodically (also updates on refresh when interval component gets reset)
 @app.callback(Output('memory', 'data'),
               Input('interval-component', 'n_intervals'))
 def update_data(n):
