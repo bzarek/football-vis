@@ -40,6 +40,12 @@ app.layout = html.Div(
     [
         dcc.Store(id="memory", data=read_sheets().to_json(orient="columns")),
 
+        dcc.Interval(
+            id='interval-component',
+            interval=60*1000, # in milliseconds
+            n_intervals=0
+        ),
+
         html.Div(
             children=[
                 dbc.Row(navbar)
@@ -50,6 +56,11 @@ app.layout = html.Div(
     ]
 )
 
+#update data periodically
+@app.callback(Output('memory', 'data'),
+              Input('interval-component', 'n_intervals'))
+def update_data(n):
+    return read_sheets().to_json(orient="columns")
 
 
 # Run local server
