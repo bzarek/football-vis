@@ -78,11 +78,18 @@ def read_sheets():
     #add "Answer" and "Correct?" columns
     df = pd.merge(df, answers_df, how='left', on=['Game', 'Week'])
     df["Correct?"] = df["Pick"] == df["Answer"]
+    # df["Correct?"] = [pd.NA if pd.isna(x) or pd.isna(y) or x=="" or y=="" else x==y for x, y in zip(df["Pick"], df["Answer"])] #ignore na or "" values
 
     #add "Profit" column normalized to $1 bet
     odds = df["Odds"]
     correct = df["Correct?"]
-    df["Profit"] = [pd.NA if pd.isna(x) else -1 if not x else -y/100 if y>0 else -100/y for x, y in zip(df["Correct?"], df["Odds"])]
+    df["Profit"] = [
+        pd.NA if pd.isna(c) or pd.isna(o) 
+        else 0 if a=="" 
+        else -1 if not c 
+        else -o/100 if o>0 else -100/o 
+        for c, o, a in zip(df["Correct?"], df["Odds"], df["Answer"])
+    ]
 
     return df
         
