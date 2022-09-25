@@ -11,7 +11,7 @@ import re
 
 API_KEY = "AIzaSyCH-Tgn-Hvct0UYM1QXGmo7sPbG1PFv8TE"
 FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
-ALIAS_DICT = {"Punith Upadhya": "P $hmurda", "Mr. Atticus Benjamin Ignelzi":"Atig"}
+ALIAS_DICT = {"Punith Upadhya": "P $hmurda", "Mr. Atticus Benjamin Ignelzi":"Atig", "Genuinely 100":"Totally 100"}
 
 drive_service = build('drive', 'v3', developerKey=API_KEY)
 sheets_service = build('sheets', 'v4', developerKey=API_KEY)
