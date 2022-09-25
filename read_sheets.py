@@ -87,7 +87,7 @@ def read_sheets():
         pd.NA if pd.isna(c) or pd.isna(o) 
         else 0 if a=="" 
         else -1 if not c 
-        else -o/100 if o>0 else -100/o 
+        else o/100 if o>0 else -100/o 
         for c, o, a in zip(df["Correct?"], df["Odds"], df["Answer"])
     ]
 
