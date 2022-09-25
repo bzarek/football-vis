@@ -31,8 +31,10 @@ def new_data(data):
     df = pd.read_json(data, orient="columns")
 
     #return table
-    df_reduced = df[["Name","Correct?", "Profit"]].copy()
-    df_reduced.rename(columns={"Correct?":"Correct Picks"}, inplace=True)
+    df_table = df[["Name","Correct?", "Profit"]].copy()
+    df_table.rename(columns={"Correct?":"Correct Picks"}, inplace=True) #change column name for display purposes
+    df_table = df_table.groupby("Name", as_index=False).sum(numeric_only=True).sort_values(by=["Correct Picks", "Profit"], ascending=False)
+    df_table["Profit"] = df_table["Profit"].apply(lambda x : f"${x:.2f}")
     return dbc.Table.from_dataframe(
-        df_reduced.groupby("Name", as_index=False).sum(numeric_only=True).round(decimals=2).sort_values(by=["Correct Picks", "Profit"], ascending=False)
+        df_table
         )
