@@ -57,5 +57,5 @@ def update_week(data, week_dropdown_str):
 
     #return outputs
     thisweek_df = df[df["Week"]==week_dropdown_val].groupby("Name").sum(numeric_only=True)
-    fig = px.bar(thisweek_df, y="Correct?", labels={"Name", "Correct Picks"})
+    fig = px.bar(thisweek_df, y="Correct?", labels={"Correct?":"Correct Picks"})
     return fig
