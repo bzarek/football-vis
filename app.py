@@ -7,8 +7,8 @@ import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 from read_sheets import read_sheets
 
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.FLATLY])
-load_figure_template("FLATLY")
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.MATERIA])
+load_figure_template("MATERIA")
 
 server = app.server
 
@@ -82,4 +82,4 @@ def update_data(n):
 
 # Run local server
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
