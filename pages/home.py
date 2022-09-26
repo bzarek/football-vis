@@ -13,10 +13,9 @@ layout = html.Div(
     children=[ 
         dbc.Container([
             dbc.Row([
-                dbc.Col(width=1),
-                dbc.Col(html.Div(id="container_leaderboard"), width=10), 
-                dbc.Col(width=1)
-                ], style={"margin-top":"24px"})
+                dbc.Col(html.Div(id="container_leaderboard"), width=12, md=4), 
+                ], justify="center",
+                style={"margin-top":"24px"})
             ], fluid=True)
         ]
     )

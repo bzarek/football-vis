@@ -15,14 +15,11 @@ layout = html.Div(
         dbc.Container([
             dbc.Row([
                 dbc.Col(width=1),
-                dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), width=1, ), 
-                dbc.Col()
+                dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), width=1), 
                 ], style={"margin-top":"24px"}), 
             dbc.Row([
-                dbc.Col(width=1),
-                dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), width=10),
-                dbc.Col()
-                ])
+                dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), width=12, md=8),
+                ], justify="center")
             ], fluid=True)
         ]
     )

@@ -60,10 +60,8 @@ app.layout = html.Div(
             children=[
                 dbc.Container([
                     dbc.Row([
-                        dbc.Col(width=4),
-                        dbc.Col(navbar, width=4),
-                        dbc.Col(width=4)
-                    ])
+                        dbc.Col(navbar, width=12, md=4),
+                    ], justify="center")
                     ], fluid=True
                     )
                 ]

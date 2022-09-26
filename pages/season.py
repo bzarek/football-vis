@@ -14,11 +14,10 @@ layout = html.Div(
     children=[ 
         dbc.Container([
             dbc.Row([
-                dbc.Col(width=1),
-                dbc.Col(dcc.Graph(id="season_bar_chart", config={"displayModeBar":False}), width=5),
-                dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=5),
-                dbc.Col(width=1)
-                ], style={"margin-top":"24px"})
+                dbc.Col(dcc.Graph(id="season_bar_chart", config={"displayModeBar":False}), width=12, md=5),
+                dbc.Col(dcc.Graph(id="season_line_plot", config={"displayModeBar":False}), width=12, md=5)
+                ], justify="evenly", 
+                style={"margin-top":"24px"})
             ], fluid=True)
         ]
     )
