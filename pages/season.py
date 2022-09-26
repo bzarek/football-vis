@@ -41,7 +41,7 @@ def new_data(data):
     df_cumsum["Cumulative Wins"] = df_cumsum.groupby("Name")["Correct Picks"].transform(pd.Series.cumsum)
     df_cumsum["Week String"] = "Week " + df_cumsum["Week"].astype("string")
 
-    fig_line = px.line(df_cumsum, x="Week", y="Cumulative Wins", color="Name", labels={"Name", "Cumulative Correct Picks"})
+    fig_line = px.line(df_cumsum, x="Week", y="Cumulative Wins", color="Name", labels={"Cumulative Wins":"Cumulative Correct Picks"})
     fig_bar = px.bar(df_cumsum, x="Correct Picks", y="Name", color="Week String", labels={"Week String":"Week"})
     fig_bar.update_layout(yaxis=dict(autorange="reversed")) #otherwise it displays in reverse alphabetical order
 
