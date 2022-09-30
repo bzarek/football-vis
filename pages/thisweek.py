@@ -1,7 +1,9 @@
 from ctypes import alignment
+from turtle import end_fill
 import plotly.express as px
 import dash
 import pandas as pd
+import numpy as np
 from read_sheets import read_sheets
 from dash import Dash, html, dcc, Input, Output, State, callback
 import dash_bootstrap_components as dbc
@@ -15,7 +17,8 @@ Styles
 
 """
 #mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
-style_away_text = {"text-align":"right"}
+style_away_text = {"text-align":"right", "margin-bottom":"2px"}
+style_home_text = {"margin-bottom":"2px"}
 #style_team_logo = {"height":"10%", "width":"10%"}
 
 """
@@ -25,13 +28,43 @@ Functions
 """
 
 def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=None, home_spread=None, away_odds=None, home_odds=None):
+    #handle missing spread
+    if away_spread is None and home_spread is not None:
+        away_spread = -home_spread
+    elif away_spread is not None and home_spread is None:
+        home_spread = -away_spread
+    
+    #handle missing odds
+    if away_odds is None and home_odds is not None:
+        away_odds = -220 - home_odds #-100 -> -120, -105 -> -115, -110 -> -110
+    elif away_odds is not None and home_odds is None:
+        home_odds = -220 - away_odds #-100 -> -120, -105 -> -115, -110 -> -110
+
+    if away_spread is None or home_spread is None or away_odds is None or home_odds is None:
+        away_text = [ 
+                html.H4(away_team, style=style_away_text),
+                html.P(away_bets, style=style_away_text)
+            ]
+        home_text = [
+                html.H4(home_team),
+                html.P(home_bets)
+            ]
+    else:
+        away_text = [ 
+            html.H4(away_team, style=style_away_text),
+            html.P(f"{away_spread:+.1f} ({away_odds:+.0f})", style={"text-align":"right", "font-size":"12px", "margin-top":"0px"}),
+            html.P(away_bets, style=style_away_text)
+            ]
+        home_text = [
+            html.H4(home_team, style=style_home_text),
+            html.P(f"{home_spread:+.1f} ({home_odds:+.0f})", style={"font-size":"12px", "margin-top":"0px"}),
+            html.P(home_bets, style=style_home_text)
+            ]
+    
     card = dbc.Card([
         dbc.Row([
             dbc.Col(
-                dbc.CardBody([ 
-                    html.H4(away_team, style=style_away_text),
-                    html.P(away_bets, style=style_away_text),
-                ]), width=4
+                dbc.CardBody(away_text), width=4
             ),
             dbc.Col(
                 dbc.CardImg(src=f"/assets/images/{away_team}.png"), width=2, md=1
@@ -40,10 +73,7 @@ def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=Non
                 dbc.CardImg(src=f"/assets/images/{home_team}.png"), width=2, md=1
             ),
             dbc.Col(
-                dbc.CardBody([ 
-                    html.H4(home_team),
-                    html.P(home_bets),
-                ]), width=4
+                dbc.CardBody(home_text), width=4
             )
         ], 
         justify="center",
@@ -69,7 +99,19 @@ def create_week_cards(df, week_num):
         away_bets = ", ".join(list(game_df[df["Pick"]==away_team]["Name"]))
         home_bets = ", ".join(list(game_df[df["Pick"]==home_team]["Name"]))
 
-        card_list.append(create_game_card(away_team, home_team, away_bets, home_bets))
+        #get spread
+        away_spread = game_df[df["Pick"]==away_team]["Spread"].unique()
+        away_spread = None if np.size(away_spread)==0 else float(away_spread[0])
+        home_spread = game_df[df["Pick"]==home_team]["Spread"].unique()
+        home_spread = None if np.size(home_spread)==0 else float(home_spread[0])
+
+        #get odds
+        away_odds = game_df[df["Pick"]==away_team]["Odds"].unique()
+        away_odds = None if np.size(away_odds)==0 else float(away_odds[0])
+        home_odds = game_df[df["Pick"]==home_team]["Odds"].unique()
+        home_odds = None if np.size(home_odds)==0 else float(home_odds[0])
+
+        card_list.append(create_game_card(away_team, home_team, away_bets, home_bets, away_spread, home_spread, away_odds, home_odds))
 
     return card_list
 
