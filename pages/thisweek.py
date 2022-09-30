@@ -31,19 +31,19 @@ def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=Non
                 dbc.CardBody([ 
                     html.H4(away_team, style=style_away_text),
                     html.P(away_bets, style=style_away_text),
-                ])
+                ]), width=4
             ),
             dbc.Col(
-                dbc.CardImg(src=f"/assets/images/{away_team}.png"), md=1
+                dbc.CardImg(src=f"/assets/images/{away_team}.png"), width=2, md=1
             ),
             dbc.Col(
-                dbc.CardImg(src=f"/assets/images/{home_team}.png"), md=1
+                dbc.CardImg(src=f"/assets/images/{home_team}.png"), width=2, md=1
             ),
             dbc.Col(
                 dbc.CardBody([ 
                     html.H4(home_team),
                     html.P(home_bets),
-                ])
+                ]), width=4
             )
         ], 
         justify="center",
