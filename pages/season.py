@@ -8,7 +8,9 @@ from dash_bootstrap_templates import load_figure_template
 
 dash.register_page(__name__, path="/season", title="Season", name="Season")
 
-#mystyle = {"margin-left":"7px", "margin-top":"7px", "margin-right":"7px"}
+plot_color_palette = ["#57aff2","#ae06d3","#ed872f","#e5205b","#048aa5","#2b8c0b","#4a0075","#f46b42","#236c8e",
+                      "#efb42b","#bdd8fc","#b51214","#204f2a","#0aaf44","#b5b5b5","#f7d19b","#683ac4","#930d47","#cce8ff","#4caa1d","#c1682c",
+                      "#6f7a8e","#DD7230","55868C","6F1D1B","#d78eed","#c9b00e","#46f4ef"]
 
 layout = html.Div(
     children=[ 
@@ -41,10 +43,10 @@ def new_data(data):
     df_cumsum["Week String"] = "Week " + df_cumsum["Week"].astype("string")
 
     fig_line = px.line(df_cumsum, x="Week", y="Cumulative Wins", color="Name", labels={"Cumulative Wins":"Cumulative Correct Picks"},
-        color_discrete_sequence=px.colors.qualitative.Dark24)
+        color_discrete_sequence=plot_color_palette)
 
     fig_bar = px.bar(df_cumsum, x="Correct Picks", y="Name", color="Week String", labels={"Week String":"Week"},
-        color_discrete_sequence=px.colors.qualitative.Dark24)
+        color_discrete_sequence=plot_color_palette)
     fig_bar.update_layout(yaxis=dict(autorange="reversed")) #otherwise it displays in reverse alphabetical order
 
     return fig_line, fig_bar
