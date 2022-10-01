@@ -26,7 +26,7 @@ Functions
 
 """
 
-def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=None, home_spread=None, away_odds=None, home_odds=None):
+def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=None, home_spread=None, away_odds=None, home_odds=None, winning_team=None):
     #handle missing spread
     if away_spread is None and home_spread is not None:
         away_spread = -home_spread
@@ -59,20 +59,32 @@ def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=Non
             html.P(f"{home_spread:+.1f} ({home_odds:+.0f})", style={"font-size":"12px", "margin-top":"0px"}),
             html.P(home_bets, style=style_home_text)
             ]
+
+    #fade the team that lost
+    if winning_team is not None and winning_team != "":
+        if winning_team==home_team:
+            home_style = dict()
+            away_style = {"opacity":"0.3"}
+        else:
+            home_style = {"opacity":"0.3"}
+            away_style = dict()
+    else:
+        home_style = dict()
+        away_style = dict()
     
     card = dbc.Card([
         dbc.Row([
             dbc.Col(
-                dbc.CardBody(away_text), width=4
+                dbc.CardBody(away_text), width=4, style=away_style
             ),
             dbc.Col(
-                dbc.CardImg(src=f"/assets/images/{away_team}.png"), width=2, md=1
+                dbc.CardImg(src=f"/assets/images/{away_team}.png"), width=2, md=1, style=away_style
             ),
             dbc.Col(
-                dbc.CardImg(src=f"/assets/images/{home_team}.png"), width=2, md=1
+                dbc.CardImg(src=f"/assets/images/{home_team}.png"), width=2, md=1, style=home_style
             ),
             dbc.Col(
-                dbc.CardBody(home_text), width=4
+                dbc.CardBody(home_text), width=4, style=home_style
             )
         ], 
         justify="center",
@@ -92,6 +104,8 @@ def create_week_cards(df, week_num):
         #get team names
         away_team = game_df["Away"].iloc[0]
         home_team = game_df["Home"].iloc[0]
+        winning_team = game_df["Answer"].iloc[0]
+        print(winning_team)
 
         #return string of people who bet on each team (comma separated)
         #note: join will concatenate the strings in the list with ", " as the delimiter
@@ -110,7 +124,9 @@ def create_week_cards(df, week_num):
         home_odds = game_df[df["Pick"]==home_team]["Odds"].unique()
         home_odds = None if np.size(home_odds)==0 else float(home_odds[0])
 
-        card_list.append(create_game_card(away_team, home_team, away_bets, home_bets, away_spread, home_spread, away_odds, home_odds))
+        #get winning team
+
+        card_list.append(create_game_card(away_team, home_team, away_bets, home_bets, away_spread, home_spread, away_odds, home_odds, winning_team))
 
     return card_list
 
