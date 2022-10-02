@@ -25,6 +25,8 @@ def read_sheet(sheet_id):
     data = result['values'] #list of lists
     header = data.pop(0)
     sheet_df = pd.DataFrame(data, columns=header, dtype=pd.StringDtype())
+    sheet_df.dropna(axis="columns", thresh=2)
+    sheet_df.dropna(axis="rows", thresh=2)
     sheet_df.drop(columns="Timestamp", inplace=True)
     
     #stack dataframe so each row is an individual bet (#rows = #people * #games)
