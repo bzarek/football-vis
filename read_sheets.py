@@ -12,6 +12,7 @@ import re
 API_KEY = "AIzaSyCH-Tgn-Hvct0UYM1QXGmo7sPbG1PFv8TE"
 FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
 ALIAS_DICT = {"Punith Upadhya": "P $hmurda", "Mr. Atticus Benjamin Ignelzi":"Atig", "Genuinely 100":"Totally 100"}
+TEAM_ALIAS_DICT = {"Minnesota Vikings":"Vikings", "New Orleans Saints":"Saints", "Buffalo Bills":"Bills", "Baltimore Ravens":"Ravens", "Chicago Bears":"Bears", "New York Giants":"Giants", "Cleveland Browns":"Browns", "Atlanta Falcons":"Falcons", "Jacksonville Jaguars":"Jaguars", "Philadelphia Eagles":"Eagles", "Los Angeles Chargers":"Chargers", "Houston Texans":"Texans", "New York Jets":"Jets", "Pittsburgh Steelers":"Steelers", "Seattle Seahawks":"Seahawks", "Detroit Lions":"Lions", "Tennessee Titans":"Titans", "Indianapolis Colts":"Colts", "Washington Commanders":"Commanders", "Dallas Cowboys":"Cowboys", "Arizona Cardinals":"Cardinals", "Carolina Panthers":"Panthers", "Denver Broncos":"Broncos", "Las Vegas Raiders":"Raiders", "New England Patriots":"Patriots", "Green Bay Packers":"Packers", "Kansas City Chiefs":"Chiefs", "Tampa Bay Buccaneers":"Buccaneers", "Los Angeles Rams":"Rams", "San Francisco 49ers":"49ers"}
 
 drive_service = build('drive', 'v3', developerKey=API_KEY)
 sheets_service = build('sheets', 'v4', developerKey=API_KEY)
@@ -55,6 +56,11 @@ def read_sheets():
     teams = df["Game"].str.split(" @ ", n=1, expand=True)
     df["Away"] = teams[0]
     df["Home"] = teams[1]
+
+    #filter out just team name without location, if necessary
+    df["Away"] = df["Away"].str.split(" ").str[-1]
+    df["Home"] = df["Home"].str.split(" ").str[-1]
+
 
     #separate pick, spread, and odds
     picks = df["Pick"]
