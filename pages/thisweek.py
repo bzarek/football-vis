@@ -62,7 +62,10 @@ def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=Non
 
     #fade the team that lost
     if winning_team is not None and winning_team != "":
-        if winning_team==home_team:
+        if winning_team.lower() == "push":
+            home_style = {"opacity":"0.3"}
+            away_style = {"opacity":"0.3"}
+        elif winning_team==home_team:
             home_style = dict()
             away_style = {"opacity":"0.3"}
         else:
