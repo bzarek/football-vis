@@ -48,7 +48,7 @@ def read_sheets():
         week_df = read_sheet(file.get('id'))
         week_num = int(re.findall(r'\d+', re.findall(r'Week \d+', file.get('name'))[0])[0]) #strip week number from pattern Week #
         week_df["Week"] = week_num
-        all_data.append(week_df)
+        all_data.insert(0, week_df)
     df = pd.concat(all_data, axis=0, ignore_index=True)
 
     #Rename "Who are you?" column to "Name"
