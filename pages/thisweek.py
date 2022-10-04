@@ -108,7 +108,6 @@ def create_week_cards(df, week_num):
         away_team = game_df["Away"].iloc[0]
         home_team = game_df["Home"].iloc[0]
         winning_team = game_df["Answer"].iloc[0]
-        print(winning_team)
 
         #return string of people who bet on each team (comma separated)
         #note: join will concatenate the strings in the list with ", " as the delimiter
