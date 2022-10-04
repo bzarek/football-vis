@@ -34,6 +34,24 @@ def read_sheet(sheet_id):
     
     return df_stacked
 
+def calc_profit(row):
+    c = row["Correct?"]
+    o = row["Odds"]
+    a = row["Answer"]
+    p = row["Push?"]
+    if pd.isna(c) or pd.isna(o):
+        return pd.NA
+    elif a=="" or p:
+        return 0
+    elif not c:
+        return -1
+    elif o > 0:
+        return o/100
+    elif o < 0:
+        return -100/o
+    else:
+        return pd.NA
+
 def read_sheets():
 
     # Iterate through all sheets in folder
@@ -86,18 +104,12 @@ def read_sheets():
     #add "Answer" and "Correct?" columns
     df = pd.merge(df, answers_df, how='left', on=['Game', 'Week'])
     df["Correct?"] = df["Pick"] == df["Answer"]
-    # df["Correct?"] = [pd.NA if pd.isna(x) or pd.isna(y) or x=="" or y=="" else x==y for x, y in zip(df["Pick"], df["Answer"])] #ignore na or "" values
+
+    #handle pushes
+    df["Push?"] = df["Answer"].str.lower() == "push"
 
     #add "Profit" column normalized to $1 bet
-    odds = df["Odds"]
-    correct = df["Correct?"]
-    df["Profit"] = [
-        pd.NA if pd.isna(c) or pd.isna(o) 
-        else 0 if a=="" 
-        else -1 if not c 
-        else o/100 if o>0 else -100/o 
-        for c, o, a in zip(df["Correct?"], df["Odds"], df["Answer"])
-    ]
+    df["Profit"] = df.apply(calc_profit, axis="columns")
 
     return df
         
