@@ -31,8 +31,7 @@ def new_data(data):
     df = pd.read_json(data, orient="columns")
 
     #create table with sums by name
-    df_table = df[["Name","Correct?", "Push?", "Profit"]].copy()
-    df_table["Incorrect?"] = ~df_table["Correct?"] & ~df_table["Push?"]
+    df_table = df[["Name","Correct?", "Incorrect?", "Push?", "Profit"]].copy()
     df_table = df_table.groupby("Name", as_index=False).sum(numeric_only=True).sort_values(by=["Correct?", "Profit"], ascending=False)
 
     #format profit and record

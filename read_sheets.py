@@ -36,14 +36,15 @@ def read_sheet(sheet_id):
 
 def calc_profit(row):
     c = row["Correct?"]
+    i = row["Incorrect?"]
     o = row["Odds"]
     a = row["Answer"]
     p = row["Push?"]
     if pd.isna(c) or pd.isna(o):
         return pd.NA
-    elif a=="" or p:
+    elif pd.isna(a) or a=="" or p:
         return 0
-    elif not c:
+    elif i:
         return -1
     elif o > 0:
         return o/100
@@ -104,9 +105,14 @@ def read_sheets():
     #add "Answer" and "Correct?" columns
     df = pd.merge(df, answers_df, how='left', on=['Game', 'Week'])
     df["Correct?"] = df["Pick"] == df["Answer"]
+    df["Correct?"] = df["Correct?"].fillna(False)
 
     #handle pushes
     df["Push?"] = df["Answer"].str.lower() == "push"
+    df["Push?"] = df["Push?"].fillna(False)
+
+    #add incorrect column
+    df["Incorrect?"] = ~df["Correct?"] & ~df["Push?"]
 
     #add "Profit" column normalized to $1 bet
     df["Profit"] = df.apply(calc_profit, axis="columns")
