@@ -104,15 +104,16 @@ def read_sheets():
 
     #add "Answer" and "Correct?" columns
     df = pd.merge(df, answers_df, how='left', on=['Game', 'Week'])
-    df["Correct?"] = df["Pick"] == df["Answer"]
-    df["Correct?"] = df["Correct?"].fillna(False)
-
-    #handle pushes
+    
+    #add boolean columns for Correct, Incorrect, and Push
+    df["Correct?"] = df["Pick"] == df["Answer"] 
     df["Push?"] = df["Answer"].str.lower() == "push"
-    df["Push?"] = df["Push?"].fillna(False)
+    df["Incorrect?"] = ~df["Correct?"] & ~df["Push?"] #relies on Correct? column containing NA values for missing data
 
-    #add incorrect column
-    df["Incorrect?"] = ~df["Correct?"] & ~df["Push?"]
+    #fill missing booleans with False to avoid inconsistent behavior
+    df["Push?"] = df["Push?"].fillna(False)
+    df["Correct?"] = df["Correct?"].fillna(False)
+    df["Incorrect?"] = df["Incorrect?"].fillna(False)
 
     #add "Profit" column normalized to $1 bet
     df["Profit"] = df.apply(calc_profit, axis="columns")
