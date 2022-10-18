@@ -1,5 +1,4 @@
 # football-vis
 Dashboard for Weekly Football Bets \
-Heroku URL:   http://football-vis.herokuapp.com/ \
-Google URL:   https://football-vis-ojch7eq6tq-uc.a.run.app \
-Personal URL: http://football-vis.bzarek.com
+My URL: http://football-vis.bzarek.com \
+Google URL:   https://football-vis-nhyycmpokq-uc.a.run.app 
