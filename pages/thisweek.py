@@ -147,7 +147,7 @@ layout = html.Div(
                 dbc.Col(dcc.Dropdown(id="week_dropdown", searchable=False, clearable=False), width=10, md=2,lg=1), 
                 ], style={"margin-top":"24px"}), 
             dbc.Row([
-                dbc.Col(dcc.Graph(id="week_total_plot", config={"displayModeBar":False}), width=12, md=8),
+                dbc.Col(html.Div(id="week_total_plot"), width=12, md=8),
                 ], justify="center", style={"margin-bottom":"14px"}),
             html.Div(id="game_cards")
             ], fluid=True)
@@ -178,7 +178,7 @@ def new_data(data):
     return week_list_str, week_dropdown_str
 
 @callback(
-    Output("week_total_plot", "figure"), 
+    Output("week_total_plot", "children"), 
     Output("game_cards", "children"),
     State("memory", "data"),
     Input("week_dropdown", "value")
@@ -192,6 +192,9 @@ def update_week(data, week_dropdown_str):
 
     #return outputs
     thisweek_df = df[df["Week"]==week_dropdown_val].groupby("Name").sum(numeric_only=True)
-    fig = px.bar(thisweek_df, y="Correct?", labels={"Correct?":"Correct Picks"})
+    if thisweek_df["Correct?"].sum() > 0:
+        fig = dcc.Graph(figure=px.bar(thisweek_df, y="Correct?", labels={"Correct?":"Correct Picks"}), config={"displayModeBar":False})
+    else:
+        fig = None
     cards = create_week_cards(df, week_dropdown_val)
     return fig, cards
