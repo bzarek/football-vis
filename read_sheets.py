@@ -8,6 +8,8 @@ from googleapiclient.discovery import build
 #from googleapiclient.errors import HttpError
 import pandas as pd
 import re
+import json 
+import time
 
 API_KEY = os.environ["GOOGLE_API_KEY"]
 FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
@@ -53,11 +55,27 @@ def calc_profit(row):
     else:
         return pd.NA
 
-def read_sheets():
+def read_sheets(to_json=False, json_path="data/datatable.json"):
+
+    #check when we last updated the json and add it to the search query
+    if to_json:
+        try:
+            json_modify_date = os.path.getmtime(json_path)
+        except:
+            json_modify_date = 0 #epoch
+        #now include this in search query
+        json_modify_date_str = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime(json_modify_date))
+        # search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
+        #                                 and name contains '(Responses)' and trashed = false and modifiedTime > {json_modify_date_str}"
+        search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
+                                        and name contains '(Responses)' and trashed = false"
+    else: #want to read all files if not using a json file
+        search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
+                                        and name contains '(Responses)' and trashed = false"
 
     # Iterate through all sheets in folder
     # response = drive_service.files().list(q=f"mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and parents in '{FOLDER_ID}'", spaces='drive', fields='nextPageToken, files(id, name)', pageToken=None).execute()
-    response = drive_service.files().list(q=f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' and name contains '(Responses)' and trashed = false", spaces='drive', fields='files(id, name)').execute()
+    response = drive_service.files().list(q=search_query, spaces='drive', fields='files(id, name)').execute()
 
     #read and concatenate all data from google sheets
     all_data = []
@@ -118,7 +136,20 @@ def read_sheets():
     #add "Profit" column normalized to $1 bet
     df["Profit"] = df.apply(calc_profit, axis="columns")
 
+    
+    if to_json:
+        try:
+            #handle updated data (make sure there are no duplicates)
+            with open(json_path, "r") as infile:
+                df_stored = json.load(infile)
+                df_concat = pd.concat([df, df_stored], axis=0, ignore_index=True).drop_duplicates(subset=["Name", "Game"], keep="last")
+        except:
+            df_concat = df
+
+        #Write to JSON file, creating directory if necessary
+        os.makedirs(os.path.dirname(json_path), exist_ok=True)
+        with open(json_path, "w") as outfile:
+            json.dump(df_concat.to_json(orient="columns"), outfile)
+
     return df
         
-
-

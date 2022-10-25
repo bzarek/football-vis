@@ -1,4 +1,5 @@
 #import numpy as np
+from textwrap import indent
 import pandas as pd
 #import plotly.express as px
 import dash
@@ -6,6 +7,7 @@ from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 from read_sheets import read_sheets
+import json
 
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.MATERIA])
 load_figure_template("MATERIA")
@@ -75,8 +77,12 @@ app.layout = html.Div(
 @app.callback(Output('memory', 'data'),
               Input('interval-component', 'n_intervals'))
 def update_data(n):
-    return read_sheets().to_json(orient="columns")
-
+    try:
+        with open("data/datatable.json", "r") as infile:
+            return json.load(infile)
+    except:
+        return read_sheets(to_json=True, json_path="data/datatable.json").to_json(orient="columns")
+    # return read_sheets().to_json(orient="columns")
 
 # Run local server
 if __name__ == '__main__':
