@@ -1,5 +1,7 @@
 #from calendar import week
+from ast import arg
 import os
+import argparse
 
 #from google.auth.transport.requests import Request
 #from google.oauth2.credentials import Credentials
@@ -55,20 +57,20 @@ def calc_profit(row):
     else:
         return pd.NA
 
-def read_sheets(to_json=False, json_path="data/datatable.json"):
+def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
 
     #check when we last updated the json and add it to the search query
-    if to_json:
+    if to_json and not read_all:
         try:
             json_modify_date = os.path.getmtime(json_path)
         except:
             json_modify_date = 0 #epoch
         #now include this in search query
         json_modify_date_str = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime(json_modify_date))
-        # search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
-        #                                 and name contains '(Responses)' and trashed = false and modifiedTime > {json_modify_date_str}"
         search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
-                                        and name contains '(Responses)' and trashed = false"
+                                        and name contains '(Responses)' and trashed = false and modifiedTime > {json_modify_date_str}"
+        # search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
+        #                                 and name contains '(Responses)' and trashed = false"
     else: #want to read all files if not using a json file
         search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
                                         and name contains '(Responses)' and trashed = false"
@@ -81,6 +83,8 @@ def read_sheets(to_json=False, json_path="data/datatable.json"):
     all_data = []
     week_num = []
     for file in response.get('files', []):
+        print(file)
+        print("here's a file")
         # print(f"Found file: {file.get('name')}, {file.get('id')}")
         week_df = read_sheet(file.get('id'))
         week_num = int(re.findall(r'\d+', re.findall(r'Week \d+', file.get('name'))[0])[0]) #strip week number from pattern Week #
@@ -152,4 +156,16 @@ def read_sheets(to_json=False, json_path="data/datatable.json"):
             json.dump(df_concat.to_json(orient="columns"), outfile)
 
     return df
-        
+
+#definition for executing read_sheets() from command line using command line arguments
+def __main__():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", help="path to json file", default="datatable.json")
+    parser.add_argument("--fullread", action="store_true", help="read all data from Google Drive folder, regardless of modify date")
+    args = parser.parse_args()
+    # print(type(args.path))
+    # print(args.fullread)
+    read_sheets(to_json=True, json_path=args.path, read_all=args.fullread)
+
+if __name__ == "__main__":
+    __main__()

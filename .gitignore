@@ -5,4 +5,4 @@ venv
 jenkins_docker_command.txt
 *_test_code.py
 .vscode
-data
+datatable.json
