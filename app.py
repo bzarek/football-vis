@@ -19,7 +19,7 @@ try:
     with open("db/datatable.json", "r") as infile:
         sheets_data = json.load(infile)
 except:
-    sheets_data = read_sheets(to_json=True, json_path="datatable.json").to_json(orient="columns")
+    sheets_data = read_sheets(to_json=True, json_path="./datatable.json")
 
 navbar = dbc.Nav(
     [

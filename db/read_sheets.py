@@ -67,13 +67,11 @@ def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
             json_modify_date = 0 #epoch
         #now include this in search query
         json_modify_date_str = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime(json_modify_date))
-        search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
-                                        and name contains '(Responses)' and trashed = false and modifiedTime > {json_modify_date_str}"
+        search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' and name contains '(Responses)' and trashed = false and modifiedTime > '{json_modify_date_str}'"
         # search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
         #                                 and name contains '(Responses)' and trashed = false"
     else: #want to read all files if not using a json file
-        search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' \
-                                        and name contains '(Responses)' and trashed = false"
+        search_query = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet' and name contains '(Responses)' and trashed = false"
 
     # Iterate through all sheets in folder
     # response = drive_service.files().list(q=f"mimeType='application/vnd.google-apps.spreadsheet' and trashed = false and parents in '{FOLDER_ID}'", spaces='drive', fields='nextPageToken, files(id, name)', pageToken=None).execute()
@@ -90,6 +88,12 @@ def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
         week_num = int(re.findall(r'\d+', re.findall(r'Week \d+', file.get('name'))[0])[0]) #strip week number from pattern Week #
         week_df["Week"] = week_num
         all_data.insert(0, week_df)
+    
+    if not all_data and to_json: #this means all_data is empty (no sheets read)
+        with open(json_path, "r") as infile:
+            sheets_data = json.load(infile)
+        return sheets_data #just return the existing data
+        
     df = pd.concat(all_data, axis=0, ignore_index=True)
 
     #Rename "Who are you?" column to "Name"
@@ -144,9 +148,8 @@ def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
     if to_json:
         try:
             #handle updated data (make sure there are no duplicates)
-            with open(json_path, "r") as infile:
-                df_stored = json.load(infile)
-                df_concat = pd.concat([df, df_stored], axis=0, ignore_index=True).drop_duplicates(subset=["Name", "Game"], keep="last")
+            df_stored = pd.read_json(json_path)
+            df_concat = pd.concat([df_stored, df], axis=0, ignore_index=True).drop_duplicates(subset=["Name", "Game"], keep="last")
         except:
             df_concat = df
 
@@ -155,7 +158,7 @@ def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
         with open(json_path, "w") as outfile:
             json.dump(df_concat.to_json(orient="columns"), outfile)
 
-    return df
+    return df.to_json(orient="columns")
 
 #definition for executing read_sheets() from command line using command line arguments
 def __main__():
