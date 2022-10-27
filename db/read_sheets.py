@@ -57,7 +57,7 @@ def calc_profit(row):
     else:
         return pd.NA
 
-def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
+def read_sheets(to_json=False, json_path="data/datatable.json", read_all=False):
 
     #check when we last updated the json and add it to the search query
     if to_json and not read_all:
@@ -163,7 +163,7 @@ def read_sheets(to_json=False, json_path="datatable.json", read_all=False):
 #definition for executing read_sheets() from command line using command line arguments
 def __main__():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--path", help="path to json file", default="datatable.json")
+    parser.add_argument("--path", help="path to json file", default="data/datatable.json")
     parser.add_argument("--fullread", action="store_true", help="read all data from Google Drive folder, regardless of modify date")
     args = parser.parse_args()
     # print(type(args.path))

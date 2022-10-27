@@ -16,10 +16,10 @@ server = app.server
 
 #read data from Google Sheets
 try:
-    with open("db/datatable.json", "r") as infile:
+    with open("db/data/datatable.json", "r") as infile:
         sheets_data = json.load(infile)
 except:
-    sheets_data = read_sheets(to_json=True, json_path="./datatable.json")
+    sheets_data = read_sheets(to_json=True, json_path="data/datatable.json")
 
 navbar = dbc.Nav(
     [
