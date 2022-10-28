@@ -19,7 +19,8 @@ RUN groupadd -r app && useradd -r -g app app
 COPY --chown=app:app ./db ./
 
 # create data directory with correct permissions for app
-RUN mkdir /app/data && chown app /app/data
+RUN mkdir /app/data 
+RUN chown -R app /app/data
 RUN chmod -R g+rwx /app/data 
 RUN chmod g+s /app/data
 
