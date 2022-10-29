@@ -68,6 +68,17 @@ app.layout = html.Div(
 #         return read_sheets(to_json=True, json_path="datatable.json").to_json(orient="columns")
     # return read_sheets().to_json(orient="columns")
 
+#update data periodically (also updates on refresh when interval component gets reset)
+@app.callback(Output('memory', 'data'),
+              Input('interval-component', 'n_intervals'))
+def update_data(n):
+    try:
+        with open("/app/db/data/datatable.json", "r") as infile:
+            sheets_data = json.load(infile)
+    except:
+        sheets_data = read_sheets(to_json=True, json_path="/app/db/data/datatable.json")
+    return sheets_data
+
 # Run local server
 if __name__ == '__main__':
     app.run_server(debug=False)
