@@ -25,7 +25,7 @@ RUN chmod -R g+rwx /app/db/data
 RUN chmod g+s /app/db/data
 
 # setup cronjob 
-RUN crontab cronfile
+RUN crontab db/cronfile
 
 # start cron
 CMD env >> /etc/environment && exec cron -f
