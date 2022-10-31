@@ -16,13 +16,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN groupadd -r app && useradd -r -g app app
 
 # Copy the rest of the codebase into the image
-COPY --chown=app:app ./db ./
+COPY --chown=app:app ./db ./db
 
 # create data directory with correct permissions for app
-RUN mkdir /app/data 
-RUN chown -R app /app/data
-RUN chmod -R g+rwx /app/data 
-RUN chmod g+s /app/data
+RUN mkdir /app/db/data 
+RUN chown -R app /app/db/data
+RUN chmod -R g+rwx /app/db/data 
+RUN chmod g+s /app/db/data
 
 # setup cronjob 
 RUN crontab cronfile
