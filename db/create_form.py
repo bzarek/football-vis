@@ -9,8 +9,7 @@ from google.oauth2 import service_account
 
 WEEK1_EPOCH_MS = 1662508801000
 
-#FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
-FOLDER_ID = "1nqCBBBSZpFBaXk5LLD1IOfJbQKB-znAq" #this is a test directory
+FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
 bovada_url = "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl"
 
 GOOGLE_CRED_DIR = "/app/football-vis-e903da22c051.json"
