@@ -1,28 +1,30 @@
 #from calendar import week
-from ast import arg
 import os
 import argparse
-
-#from google.auth.transport.requests import Request
-#from google.oauth2.credentials import Credentials
-#from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-#from googleapiclient.errors import HttpError
+from google.oauth2 import service_account
 import pandas as pd
 import re
 import json 
 import time
 
-API_KEY = os.environ["GOOGLE_API_KEY"]
-FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
+#read alias files
 with open("/app/db/alias.json", "r") as infile:
     ALIAS_DICT = json.load(infile)
 with open("/app/db/team_alias.json", "r") as infile:
     TEAM_ALIAS_DICT = json.load(infile)
 
-drive_service = build('drive', 'v3', developerKey=API_KEY)
-sheets_service = build('sheets', 'v4', developerKey=API_KEY)
+#Google API 
+FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
+
+GOOGLE_CRED_DIR = "/app/football-vis-e903da22c051.json"
+credentials = service_account.Credentials.from_service_account_file(filename=GOOGLE_CRED_DIR)
+
+drive_service = build('drive', 'v3', credentials=credentials)
+sheets_service = build('sheets', 'v4', credentials=credentials)
 sheet = sheets_service.spreadsheets()
+
+#helper functions
 
 def read_sheet(sheet_id):
     result = sheet.values().get(spreadsheetId=sheet_id, range="A1:BZ1000").execute()

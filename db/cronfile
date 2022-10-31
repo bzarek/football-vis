@@ -1,5 +1,3 @@
-# do an incremental read every minute, except for 3:00am
-# * 0-2,4-23 * * * /usr/local/bin/python /app/read_sheets.py --path /app/data/datatable.json >/app/cron.log 2>/app/cronerror.log
-# 1-59 3 * * * /usr/local/bin/python /app/read_sheets.py --path /app/data/datatable.json >/app/cron.log 2>/app/cronerror.log
-# do a full read at every 10 minutes
 */10 * * * * /usr/local/bin/python /app/read_sheets.py --path /app/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
+0 12 * * 3 /usr/local/bin/python /app/create_form.py --days 3
+0 12 * * 6 /usr/local/bin/python /app/create_form.py --days 3
