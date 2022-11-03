@@ -37,8 +37,8 @@ def create_game_question(home_team, home_spread, home_odds, away_team, away_spre
     away_team = away_team.split(" ")[-1]
 
     matchup = f"{away_team} @ {home_team}"
-    option1 = f"{away_team} {away_odds} ({away_spread})"
-    option2 = f"{home_team} {home_odds} ({home_spread})"
+    option1 = f"{away_team} {away_spread:+.1f} ({away_odds})"
+    option2 = f"{home_team} {home_spread:+.1f} ({home_odds})"
 
     new_question = {
         "requests": [{
