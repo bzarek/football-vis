@@ -1,3 +1,9 @@
-*/10 * * * * /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
-0 12 * * 3 /usr/local/bin/python /app/db/create_form.py --days 3
-0 12 * * 6 /usr/local/bin/python /app/db/create_form.py --days 3
+#every 10 minutes, except for Sundays 3pm-midnight (converted to UTC time)
+*/10 * * * 2-6 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
+*/10 0-19 * * 0 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
+* 20-23 * * 0 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
+* 0-5 * * 1 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
+*/10 6-23 * * 1 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
+#noon on Wednesdays and Saturdays
+0 17 * * 3 /usr/local/bin/python /app/db/create_form.py --days 3
+0 17 * * 6 /usr/local/bin/python /app/db/create_form.py --days 3
