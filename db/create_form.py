@@ -6,11 +6,14 @@ import time
 import datetime
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+from discord import SyncWebhook
 
 WEEK1_EPOCH_MS = 1662508801000
 
 FOLDER_ID = "1AynxiUqO57f_TZSWzu1Dee5C8BWTQ4Iy"
 bovada_url = "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl"
+
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 GOOGLE_CRED_DIR = "/app/football-vis-e903da22c051.json"
 credentials = service_account.Credentials.from_service_account_file(filename=GOOGLE_CRED_DIR)
@@ -166,6 +169,11 @@ def __main__():
                             question_index = question_index + 1
                             break #exit out of this loop now what we've found what we're looking for
                 break #exit out of this loop now what we've found what we're looking for
+
+    #post link on discord server
+    form_response_url = form_service.forms().get(formId=result["id"]).execute()["responderUri"]
+    discord_webhook = SyncWebhook.from_url(DISCORD_WEBHOOK_URL)
+    discord_webhook.send(form_response_url)
 
 
     
