@@ -126,7 +126,7 @@ def create_new_form(week_num):
 
 def __main__():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--days", help="number of days into the future to pull football games", type=int, default=3)
+    parser.add_argument("--days", help="number of days into the future to pull football games", type=int, default=3.2)
     args = parser.parse_args()
     days = int(args.days)
 
