@@ -126,9 +126,13 @@ def create_new_form(week_num):
 
 def __main__():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--days", help="number of days into the future to pull football games", type=int, default=3.2)
+    parser.add_argument("--offset", help="number of hours into the future to start looking for football games", type=int, default=0)
+    parser.add_argument("--duration", help="number of hours past the offset time to pull football games", type=int, default=72)
     args = parser.parse_args()
-    days = int(args.days)
+    offset = int(args.offset)
+    duration = int(args.duration)
+
+    
 
     #get the current time and the number of weeks that have passed since first game
     current_time_ms = time.time() * 1000
@@ -145,13 +149,14 @@ def __main__():
     game_list = json.loads(response.read())[0]["events"]
 
     #set cutoff time in ms since epoch
-    cutoff_time_ms = current_time_ms + days*24*60*60*1000
+    start_time_ms = current_time_ms + offset*60*60*1000
+    end_time_ms = start_time_ms + duration*60*60*1000
     
     #begin question index at 2 (Who are you? question is number 1)
     question_index = 1
 
     for game in game_list: #iterate over games
-        if game["startTime"] > current_time_ms and game["startTime"] < cutoff_time_ms: #only consider games within certain time window
+        if game["startTime"] > start_time_ms and game["startTime"] < end_time_ms: #only consider games within certain time window
             
             #iterate through unordered lists to find game lines and point spread
             #stop once the right info is found

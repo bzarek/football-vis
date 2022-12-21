@@ -5,5 +5,5 @@
 * 0-5 * * 1 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
 */10 6-23 * * 1 /usr/local/bin/python /app/db/read_sheets.py --path /app/db/data/datatable.json --fullread >/app/cron.log 2>/app/cronerror.log
 #7pm on Wednesdays and 1pm on Saturdays EST
-0 0 * * 4 /usr/local/bin/python /app/db/create_form.py --days 3
-0 18 * * 6 /usr/local/bin/python /app/db/create_form.py --days 3
+0 0 * * 4 /usr/local/bin/python /app/db/create_form.py --offset 8 --duration 72 #games from Thursday 3am to Sunday 3am
+0 18 * * 6 /usr/local/bin/python /app/db/create_form.py --offset 14 --duration 48 #games from Sunday 3am to Tuesday 3am
