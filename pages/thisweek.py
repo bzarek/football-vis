@@ -99,10 +99,11 @@ def create_game_card(away_team, home_team, away_bets, home_bets, away_spread=Non
 def create_week_cards(df, week_num):
 
     card_list = [] #list for storing dbc.Card elements
-    games_list = df[df["Week"]== week_num]["Game"].unique()
+    df_thisweek = df[df["Week"]== week_num]
+    games_list = df_thisweek["Game"].unique()
 
     for game in games_list:
-        game_df = df[df["Game"]==game]
+        game_df = df_thisweek[df_thisweek["Game"]==game]
 
         #get team names
         away_team = game_df["Away"].iloc[0]
@@ -111,13 +112,13 @@ def create_week_cards(df, week_num):
 
         #return string of people who bet on each team (comma separated)
         #note: join will concatenate the strings in the list with ", " as the delimiter
-        away_bets = ", ".join(list(game_df[df["Pick"]==away_team]["Name"]))
-        home_bets = ", ".join(list(game_df[df["Pick"]==home_team]["Name"]))
+        away_bets = ", ".join(list(game_df[df_thisweek["Pick"]==away_team]["Name"]))
+        home_bets = ", ".join(list(game_df[df_thisweek["Pick"]==home_team]["Name"]))
 
         #get spread
-        away_spread = game_df[df["Pick"]==away_team]["Spread"].unique()
+        away_spread = game_df[df_thisweek["Pick"]==away_team]["Spread"].unique()
         away_spread = None if np.size(away_spread)==0 else float(away_spread[0])
-        home_spread = game_df[df["Pick"]==home_team]["Spread"].unique()
+        home_spread = game_df[df_thisweek["Pick"]==home_team]["Spread"].unique()
         home_spread = None if np.size(home_spread)==0 else float(home_spread[0])
 
         #get odds
